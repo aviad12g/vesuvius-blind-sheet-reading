@@ -203,3 +203,6 @@ a 1 cm² sheet, both faces: Reader V3 about 4 seconds, Studio about 50 (stride 4
 
 Related earlier work by the same author: `aviad12g/vesuvius-depth-order-control` (depth-order and cross-model
 controls for 9 µm ink detection, September 2026).
+
+The code, analysis and write-up were produced with substantial AI assistance (Claude, working as an agent on the
+author's behalf).
