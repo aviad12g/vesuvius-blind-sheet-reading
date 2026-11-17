@@ -23,7 +23,7 @@ ap.add_argument('--max-minutes', type=float, default=600); ap.add_argument('--dr
 ap.add_argument('--studio-faces', default='forward,reverse'); ap.add_argument('--trace-faces', default='forward,reverse'); ap.add_argument('--claim', action='store_true'); ap.add_argument('--desc', action='store_true')
 ap.add_argument('--ds', type=int, default=4); ap.add_argument('--canv', default=''); ap.add_argument('--xrange', default='')
 ap.add_argument('--flatten', action='store_true'); ap.add_argument('--koffs', default='0'); ap.add_argument('--fl-s', type=int, default=6)
-ap.add_argument('--base-only', action='store_true'); ap.add_argument('--rows', default=''); ap.add_argument('--cols', default=''); ap.add_argument('--min-mm2', type=float, default=8.0)
+ap.add_argument('--base-only', action='store_true'); ap.add_argument('--fill', type=int, default=-1); ap.add_argument('--rows', default=''); ap.add_argument('--cols', default=''); ap.add_argument('--min-mm2', type=float, default=8.0)
 ap.add_argument('--models', default='trace,studio'); ap.add_argument('--studio-stride', type=int, default=96); ap.add_argument('--batch', type=int, default=32)
 ap.add_argument('--ccols', default='115:235'); ap.add_argument('--control306', action='store_true'); ap.add_argument('--device', default='cuda'); ap.add_argument('--threads', type=int, default=48)
 A = ap.parse_args(); R = A.root; T0 = time.time()
@@ -216,6 +216,12 @@ def process(name, grids, cfg, od, D=D):
     pat = st.link(cols, cen, (2 * D + 1, h, w), tau=1.5 + LS / 4, tau2=2.0 + LS / 4, min_cells=int(A.min_mm2 / cell_mm2))
     canv = st.pack([st.smooth_fill(p, sigma=6.0 / LS + 0.25) for p in pat]); canv.sort(key=lambda c: np.nanmedian(c['H']))
     if A.base_only: canv = [dict(H=np.where(vl, float(D), np.nan).astype(np.float32), occ=vl.copy(), n=1)]
+    if A.fill >= 0 and A.fill < len(canv):                                                 # one tracked sheet, carried smoothly across the gaps between its pieces (harmonic fill), read everywhere
+        occ0 = canv[A.fill]['occ'].copy(); Hk = canv[A.fill]['H'].astype(np.float32)
+        _, (ii, jj) = ndi.distance_transform_edt(~occ0, return_indices=True); Hx = Hk[ii, jj].astype(np.float32)
+        for _ in range(3000): Hx = np.where(occ0, Hk, ndi.uniform_filter(Hx, 3, mode='nearest'))
+        canv = [dict(H=np.where(vl, Hx, np.nan).astype(np.float32), occ=vl.copy(), n=1)]
+        Image.fromarray((occ0 * 255).astype(np.uint8)).save(f'{od}/fill_occ.png'); log('fill: canvas', A.fill, 'tracked cells', int(occ0.sum()), 'of', int(vl.sum()))
     t2 = time.time(); nc = len(canv)
     if nc == 0: json.dump(dict(skipped='no sheets tracked', name=name), open(f'{od}/done.json', 'w')); return None
     for c in canv:                                                                         # fill outside the footprint with the nearest height
