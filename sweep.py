@@ -37,7 +37,7 @@ DEV = A.device if torch.cuda.is_available() else 'cpu'
 LS = A.ls; D = A.D; TILE = A.tile; MARG = A.marg; LAYERS = np.arange(-12, 13); C = 12; DS = A.ds; CANV = [int(v) for v in A.canv.split(',')] if A.canv else []; XR = [int(v) for v in A.xrange.split(':')] if A.xrange else None
 assert TILE % (DS * LS) == 0 and MARG % DS == 0
 def _sc(name, scan, um, kev): return dict(ct=f'{name}/volumes/{scan}-{um:.3f}um-1.2m-{kev}keV-masked.zarr', m7=f'{name}/representations/predictions/surfaces/{scan}-surface-20260413222639-surface-m7-L0-th0.2.zarr', um=um)
-SCROLLS = {'PHerc1447': _sc('PHerc1447', '20250521151220', 8.64, 116), 'PHerc0800': _sc('PHerc0800', '20250521135224', 8.64, 116), 'PHerc0306B': _sc('PHerc0306B', '20250521133212', 8.64, 116),
+SCROLLS = {'PHerc0268': _sc('PHerc0268', '20251110183117', 8.64, 116), 'PHerc0257': _sc('PHerc0257', '20250821151750', 9.362, 113), 'PHerc0125': _sc('PHerc0125', '20250821151825', 9.362, 113), 'PHerc0826': _sc('PHerc0826', '20250821151701', 9.362, 113), 'PHerc1447': _sc('PHerc1447', '20250521151220', 8.64, 116), 'PHerc0800': _sc('PHerc0800', '20250521135224', 8.64, 116), 'PHerc0306B': _sc('PHerc0306B', '20250521133212', 8.64, 116),
            'PHerc0813': _sc('PHerc0813', '20250821151723', 9.362, 113), 'PHerc0358': _sc('PHerc0358', '20250821151737', 9.362, 113),
            'PHerc0211': _sc('PHerc0211', '20250821151803', 9.362, 113)}
 UM = 8.64 if A.control306 else SCROLLS[A.scroll]['um']; UM4 = UM * DS

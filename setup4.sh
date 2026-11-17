@@ -19,7 +19,7 @@ sparse villa https://github.com/ScrollPrize/villa.git a329895ea5e9bde78752e60dbc
 log "Studio ink model code @ 235e3be8 (PHerc0211 winner)"
 sparse studio https://github.com/priyankaranke/vesuvius-studio-multiscroll-cpt.git 235e3be8a06749344862c89a1e52c81d90b15e0e studio-multiscroll-cpt-20261023/hf
 log "public meshes @ 620769e2 (PHerc0813, PHerc0358, PHerc0211)"
-sparse pmesh https://github.com/pscamillo/vesuvius-eligible-meshes.git 620769e2e1e70d1e61b588092229cb76d3af4804 meshes/PHerc0813 meshes/PHerc0358 meshes/PHerc0211
+sparse pmesh https://github.com/pscamillo/vesuvius-eligible-meshes.git 620769e2e1e70d1e61b588092229cb76d3af4804 meshes/PHerc0813 meshes/PHerc0358 meshes/PHerc0211 meshes/PHerc0268 meshes/PHerc0257 meshes/PHerc0125 meshes/PHerc0826
 log weights
 C=$R/r/submission/code; mkdir -p $C/models/community/trace
 curl -sfL --retry 5 -o $C/models/community/trace/v3B_best.pth https://github.com/Jashann/vesuvius-scrolling/releases/download/v1.0/v3B_best.pth
